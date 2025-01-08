@@ -1,0 +1,92 @@
+<module>
+    <id>xibosignage-megasena</id>
+    <name>Mega-Sena Results</name>
+    <icon>fa fa-sitemap</icon>
+    <author>Seu Nome</author>
+    <description>Displays the latest Mega-Sena lottery results</description>
+    <class>\Xibo\Custom\MegaSenaDataProvider</class>
+    <type>megasena</type>
+    <dataType>html</dataType>
+    <schemaVersion>1</schemaVersion>
+    <assignable>1</assignable>
+    <regionSpecific>1</regionSpecific>
+    <renderAs>html</renderAs>
+    <defaultDuration>60</defaultDuration>
+    <settings></settings>
+    <properties>
+        <property id="effect" type="effectSelector" variant="all">
+            <title>Effect</title>
+            <helpText>Please select the effect that will be used to transition between items.</helpText>
+            <default>noTransition</default>
+        </property>
+    </properties>
+    <preview></preview>
+    <stencil>
+        <hbs><![CDATA[
+   <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .content-mega {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px auto;
+        }
+        .numero {
+            font-size: 140px;
+            width: 250px;
+            height: 250px;
+            font-weight: 600;
+            line-height: 250px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #06bb68;
+            display: inline-block;
+            color: #ffffff;
+            margin: 10px;
+        }
+
+        .proximo {
+            font-size: 40px;
+            text-transform: uppercase;
+            margin-bottom: 0;
+        }
+
+        .acumuladavalor {
+            font-size: 90px;
+            padding: 0;
+            margin-top: 0;
+        }
+
+        .numero_concurso {
+            font-size: 40px;
+            color: #000;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 1.5rem;
+            color: #666666;
+            margin: 10px 0;
+        }
+    </style>
+    
+    <div class="content-mega">
+        <p class="numero_concurso">Número do Concurso: {{ numero_concurso }}</p>
+        <p>Data do Sorteio: {{ draw_date }}</p>
+        {{{ draw_numbers }}}
+        <h4>Acumulado para próximo concurso:</h4>
+        <h3> {{ estimativa_proximo }} </h3>
+        <p>Próximo Sorteio: {{ next_draw_date }}</p>
+    </div>
+  ]]></hbs>
+    </stencil>
+
+    <onRender><![CDATA[
+$(target).xiboLayoutScaler(properties);
+    ]]></onRender>
+</module>
