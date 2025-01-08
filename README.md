@@ -13,7 +13,8 @@ Este módulo permite exibir os resultados mais recentes da Mega Sena diretamente
 ---
 
 ## Requisitos
-- **Xibo CMS** versão 3.0 ou superior.
+- **Xibo CMS** versão 4.0 ou superior.
+- Não testado em versões anteriores
 - Dependências PHP: 
   - `curl`
   - `json`
