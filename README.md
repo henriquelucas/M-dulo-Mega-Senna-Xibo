@@ -21,3 +21,7 @@ Este módulo permite exibir os resultados mais recentes da Mega Sena diretamente
 - Acesso à internet para conexão com a API.
 
 ---
+## Instalação
+- Os módulos da xibo tem instalação padronizada copie os dados para pasta `custom`. Feito isso  vá até Administração > Modulos e procure por Mega-Senna, ative o modulo e vá ate o editor de Layout e procure pelo modulo.
+
+---
