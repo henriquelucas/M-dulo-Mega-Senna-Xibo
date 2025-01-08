@@ -1,6 +1,6 @@
 # Módulo Mega Sena - Xibo
 
-Este módulo permite exibir os resultados mais recentes da Mega Sena diretamente no Xibo, incluindo números sorteados, valores acumulados, detalhes de premiação, entre outros. Ele utiliza a API gratuita disponibilizada pelo projeto [Loterias API](https://github.com/guto-alves/loterias-api) para obter os dados mais atualizados.
+Este módulo permite exibir os resultados mais recentes da Mega Sena diretamente no Xibo, incluindo números sorteados, valores acumulados, detalhes de premiação, entre outros. Ele utiliza a API gratuita disponibilizada pelo projeto [Loterias API]([https://github.com/guto-alves/loterias-api](https://github.com/guidi/loteria_api)) para obter os dados mais atualizados.
 
 ---
 
