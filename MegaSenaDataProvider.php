@@ -2,6 +2,7 @@
 namespace Xibo\Custom;
 
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Xibo\Widget\Provider\DataProviderInterface;
 use Xibo\Widget\Provider\DurationProviderInterface;
 use Xibo\Widget\Provider\WidgetProviderInterface;
@@ -13,63 +14,59 @@ class MegaSenaDataProvider implements WidgetProviderInterface
 
     public function fetchData(DataProviderInterface $dataProvider): WidgetProviderInterface
     {
+        // Criando uma instância do cliente HTTP (Guzzle)
+        $client = new Client();
+        
+        // URL da API
         $url = 'https://api.guidi.dev.br/loteria/megasena/ultimo';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'accept: application/json'
-        ]);
-
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        if ($response === false) {
-            throw new \Exception("Erro ao acessar a API da Mega Sena.");
+        
+        // Realizando a requisição GET para a API
+        $response = $client->get($url);
+        
+        // Decodificando a resposta JSON da API
+        $data = json_decode($response->getBody()->getContents(), true);
+        
+        // Verificando se a requisição foi bem-sucedida
+        if ($data && isset($data['numero'], $data['listaDezenas'])) {
+            $numeroConcurso = $data['numero']; // Número do concurso
+            
+            // Criando as dezenas formatadas com <span>
+            $dezenas = array_map(function($dezena) {
+                return "<span style='font-size: 140px;
+                width: 250px;
+                height: 250px;
+                font-weight: 600;
+                line-height: 250px;
+                text-align: center;
+                border-radius: 50%;
+                background-color: #06bb68!important;
+                display: inline-block;
+                color: #ffffff;
+                margin: 10px;'>$dezena</span>";
+            }, $data['listaDezenas']);
+            
+            // Transformando as dezenas em uma string separada por espaços
+            $dezenasHtml = implode(' ', $dezenas);
+            
+            // Criando a informação sobre o prêmio acumulado
+            $estimado = $data['valorEstimadoProximoConcurso'] ?? 'Não estimado';
+            $valorAcumuladoHtml = "<div style='text-align: center; margin-top: 20px;'>
+                <h2 style='font-size: 40px;text-align: center; line-height:1; font-weight: 600; text-transform: uppercase;'>Estimativa do próximo concurso:</h1>
+                <p style='font-size: 100px;text-align: center; line-height:1; font-weight: 600; margin-top: 0;'> R$ " . number_format($estimado, 2, ',', '.') . "</p>
+            </div>";
+            
+            // Adicionando os dados ao provider
+            $dataProvider->addItem([
+                'subject' => 'Número do Concurso - ' . $numeroConcurso,
+                'body' => $dezenasHtml . $valorAcumuladoHtml,  // Concatenando as dezenas com os dados do prêmio
+                'date' => Carbon::now(),
+                'createdAt' => Carbon::now(),
+            ]);
         }
 
-        $data = json_decode($response, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE || !is_array($data)) {
-            throw new \Exception("Erro ao decodificar o JSON da API ou formato inválido.");
-        }
-
-        // Extração segura dos dados da API
-        $drawDate = $data['dataApuracao'] ?? 'N/D';
-        $drawNumbers = $data['listaDezenas'] ?? [];
-        $prizeDetails = $data['listaRateioPremio'] ?? [];
-        $nextDrawDate = $data['dataProximoConcurso'] ?? 'N/D';
-        $accumulatedPrize = $data['valorAcumuladoProximoConcurso'] ?? 0;
-        $estimativaproximo = $data['valorEstimadoProximoConcurso'] ?? 'N/D';
-        $numeroconcurso = $data['numeroConcursoFinal_0_5'];
-
-        // Gere o HTML para os números sorteados
-        $drawNumbersHtml = implode(' ', array_map(function ($number) {
-            return "<span class='numero'>{$number}</span>";
-        }, $drawNumbers));
-
-        // Gere o HTML para as premiações
-        $prizeHtml = '';
-        foreach ($prizeDetails as $prize) {
-            $prizeHtml .= "<div class='premiacao'>";
-            $prizeHtml .= "<span class='descricao'>{$prize['descricaoFaixa']}</span>: ";
-            $prizeHtml .= "<span class='ganhadores'>{$prize['numeroDeGanhadores']} ganhadores</span>, ";
-            $prizeHtml .= "<span class='valorPremio'>R$ " . number_format($prize['valorPremio'], 2, ',', '.') . "</span>";
-            $prizeHtml .= "</div>";
-        }
-
-        // Adicione os dados ao provedor
-        $dataProvider->addItem([
-            'draw_date' => $drawDate,
-            'draw_numbers' => $drawNumbersHtml,
-            'prize_details' => $prizeHtml,
-            'next_draw_date' => $nextDrawDate,
-            'numero_concurso' => $numeroconcurso,
-            'accumulated_prize' => "R$ " . number_format($accumulatedPrize, 2, ',', '.'),
-            'estimativa_proximo' => "R$ " . number_format($estimativaproximo, 2, ',', '.'),
-        ]);
-
+        // Marcando que os dados foram processados
         $dataProvider->setIsHandled();
+        
         return $this;
     }
 
