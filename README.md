@@ -1,4 +1,5 @@
-![modulo](https://raw.githubusercontent.com/henriquelucas/Modulo-Mega-Senna-Xibo/refs/heads/main/Captura%20de%20tela%202025-01-07%20210403.png)
+![Captura de tela Mega-Sena Xibo](https://raw.githubusercontent.com/henriquelucas/Modulo-Mega-Senna-Xibo/refs/heads/main/Captura%20de%20tela%202025-01-07%20210403.png)
+
 
 
 # Módulo Mega Sena - Xibo
