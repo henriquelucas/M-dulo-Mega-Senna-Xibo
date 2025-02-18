@@ -29,7 +29,9 @@ Este módulo permite exibir os resultados mais recentes da Mega Sena diretamente
 - Os módulos da xibo tem instalação padronizada copie os dados para pasta `custom` os arquivos devem ficar na pasta raiz custom veja o exemplo abaixo de como deve ficar o diretorio. Feito isso  vá até Administração > Modulos e procure por Mega-Senna, ative o modulo e vá ate o editor de Layout e procure pelo módulo.
 
 Custom/MegaDataProvider.php
+
 Custom/modules
+
 Custom/modules/templates/
 
 
